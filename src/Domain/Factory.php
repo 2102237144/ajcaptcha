@@ -80,7 +80,8 @@ class Factory
 
         $interfereVo = $data->getInterfereVo($backgroundVo, $templateVo, $this->config['block_puzzle']['templates']);
 
-        if($this->config['block_puzzle']['is_cache_pixel'] === true){
+        if(isset($this->config['block_puzzle']['is_cache_pixel']) &&
+            $this->config['block_puzzle']['is_cache_pixel'] === true){
             $cache = $this->makeCacheEntity();
             foreach ([$backgroundVo, $templateVo, $interfereVo] as $vo){
                 /**@var ImageVo $vo**/
