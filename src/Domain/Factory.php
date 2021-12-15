@@ -17,6 +17,8 @@ class Factory
 {
     protected $config;
 
+    protected $cacheInstance;
+
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -82,7 +84,7 @@ class Factory
 
         if(isset($this->config['block_puzzle']['is_cache_pixel']) &&
             $this->config['block_puzzle']['is_cache_pixel'] === true){
-            $cache = $this->makeCacheEntity();
+            $cache = $this->getCacheInstance();
             foreach ([$backgroundVo, $templateVo, $interfereVo] as $vo){
                 /**@var ImageVo $vo**/
                 $key = 'image_pixel_map_'.$vo->src;
@@ -130,9 +132,12 @@ class Factory
     /**
      * 创建缓存实体
      */
-    public function makeCacheEntity(): Cache
+    public function getCacheInstance(): Cache
     {
-        return new Cache($this->config['cache']);
+        if(empty($this->cacheInstance)){
+            $this->cacheInstance = new Cache($this->config['cache']);
+        }
+        return  $this->cacheInstance;
     }
 
     public function makeWordData(): WordData
