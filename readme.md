@@ -18,7 +18,7 @@ PHP实现： https://gitee.com/fastknife/aj-captcha
 * PHP版本至少需要7.1
 * 此软件包自带缓存，如有需要请自行更换
 * anji-plus/captcha前端默认请求头是 application/json 需替换为 application/x-www-form-urlencode
-
+* 若您的服务器IO读写能力差，建议您使用1.1.x以上的版本
 #### 如何使用
 test 目录下示例了三种使用方式，phper可以参考使用。[查看demo](./demo.md)
 > 本软件包需要配合composer一起使用
