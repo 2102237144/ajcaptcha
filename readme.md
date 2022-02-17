@@ -19,7 +19,7 @@ PHP实现： https://gitee.com/fastknife/aj-captcha
 * 此软件包自带缓存，如有需要请自行更换
 * anji-plus/captcha前端默认请求头是 application/json 需替换为 application/x-www-form-urlencode
 
-* 滑动验证图效果时间慢？
+* 滑动验证图响应时间慢？
    > 性能慢的主要原因是受php GD库的imagecolorat函数与imagesetpixel函数性能的影响
   1. 您可以尝试将修改内存`ini_set('memory_limit', '256M')`
   2. 将本包升级到1.1.x版本，开启像素缓存`block_puzzle.is_cache_pixel = true`, 若还是性能还是慢，则将干扰图片关闭`block_puzzle.is_interfere => false`
