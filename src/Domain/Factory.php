@@ -83,7 +83,8 @@ class Factory
 
         $pixelMaps = [$backgroundVo, $templateVo];
         if (
-            isset($this->config['block_puzzle']['is_interfere']) && $this->config['block_puzzle']['is_interfere'] == true
+            isset($this->config['block_puzzle']['is_interfere']) &&
+            $this->config['block_puzzle']['is_interfere'] == true
         ) {
             $interfereVo = $data->getInterfereVo($backgroundVo, $templateVo, $this->config['block_puzzle']['templates']);
             $image->setInterfereVo($interfereVo);
