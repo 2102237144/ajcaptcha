@@ -65,18 +65,21 @@ class BlockImage extends BaseImage
     {
         $flag = false;
         $this->cutByTemplate($this->templateVo, $this->backgroundVo, function ($param) use (&$flag) {
-            if (! $flag) {
+            if (!$flag) {
                 //记录第一个点
                 $this->setPoint(new PointVo($param[0], 5));//前端已将y值写死
                 $flag = true;
             }
         });
-        $this->cutByTemplate($this->interfereVo, $this->backgroundVo);
+        if (!empty($this->interfereVo)) {
+            $this->cutByTemplate($this->interfereVo, $this->backgroundVo);
+        }
         $this->makeWatermark($this->backgroundVo->image);
     }
 
 
-    public function cutByTemplate(TemplateVo $templateVo,BackgroundVo  $backgroundVo, $callable = null){
+    public function cutByTemplate(TemplateVo $templateVo, BackgroundVo $backgroundVo, $callable = null)
+    {
         $template = $templateVo->image;
         $width = $template->getWidth();
         $height = $template->getHeight();
@@ -93,7 +96,7 @@ class BlockImage extends BaseImage
                     }
                     $backgroundVo->vagueImage($bgX, $bgY);//模糊背景图选区
 
-                    $this->copyPickColor($backgroundVo,$bgX,$bgY, $templateVo, $x, $y);
+                    $this->copyPickColor($backgroundVo, $bgX, $bgY, $templateVo, $x, $y);
                 }
                 if ($templateVo->isBoundary($isOpacity, $x, $y)) {
                     $backgroundVo->setPixel(self::WHITE, $bgX, $bgY);
@@ -109,7 +112,8 @@ class BlockImage extends BaseImage
      * @param ImageVo $target
      */
 
-    protected function copyPickColor(ImageVo $source, $sourceX, $sourceY,ImageVo $target, $targetX, $targetY){
+    protected function copyPickColor(ImageVo $source, $sourceX, $sourceY, ImageVo $target, $targetX, $targetY)
+    {
         $bgRgba = $source->getPickColor($sourceX, $sourceY);
         $target->setPixel($bgRgba, $targetX, $targetY);//复制背景图片给模板
     }

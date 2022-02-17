@@ -49,13 +49,12 @@ class Factory
     }
 
 
-
     /**
      * 设置公共配置
      * @param BaseImage $image
      * @param BaseData $data
      */
-    protected  function setCommon(BaseImage $image, BaseData $data)
+    protected function setCommon(BaseImage $image, BaseData $data)
     {
         //固定驱动，少量图片处理场景gd性能远远大于imagick
         ImageManagerStatic::configure(['driver' => 'gd']);
@@ -72,7 +71,7 @@ class Factory
      * @param BlockImage $image
      * @param BlockData $data
      */
-    protected  function setBlock(BlockImage $image, BlockData $data)
+    protected function setBlock(BlockImage $image, BlockData $data)
     {
         //设置背景
         $backgroundVo = $data->getBackgroundVo($this->config['block_puzzle']['backgrounds']);
@@ -80,29 +79,38 @@ class Factory
 
         $templateVo = $data->getTemplateVo($backgroundVo, $this->config['block_puzzle']['templates']);
 
-        $interfereVo = $data->getInterfereVo($backgroundVo, $templateVo, $this->config['block_puzzle']['templates']);
+        $image->setTemplateVo($templateVo);
 
-        if(isset($this->config['block_puzzle']['is_cache_pixel']) &&
-            $this->config['block_puzzle']['is_cache_pixel'] === true){
+        $pixelMaps = [$backgroundVo, $templateVo];
+        if (
+            isset($this->config['block_puzzle']['is_interfere']) && $this->config['block_puzzle']['is_interfere'] == true
+        ) {
+            $interfereVo = $data->getInterfereVo($backgroundVo, $templateVo, $this->config['block_puzzle']['templates']);
+            $image->setInterfereVo($interfereVo);
+            $pixelMaps[] = $interfereVo;
+        }
+
+        if (
+            isset($this->config['block_puzzle']['is_cache_pixel']) &&
+            $this->config['block_puzzle']['is_cache_pixel'] === true
+        ) {
             $cache = $this->getCacheInstance();
-            foreach ([$backgroundVo, $templateVo, $interfereVo] as $vo){
-                /**@var ImageVo $vo**/
-                $key = 'image_pixel_map_'.$vo->src;
+            foreach ($pixelMaps as $vo) {
+                /**@var ImageVo $vo * */
+                $key = 'image_pixel_map_' . $vo->src;
                 $result = $cache->get($key);
-                if(!empty($result) && is_array($result)){
+                if (!empty($result) && is_array($result)) {
                     $vo->setPickMaps($result);
-                }else{
+                } else {
                     $vo->preparePickMaps();
-                    $vo->setFinishCallback(function(ImageVo $imageVo)use($cache, $key){
-                        $cache->set($key, $imageVo->getPickMaps(),0);
+                    $vo->setFinishCallback(function (ImageVo $imageVo) use ($cache, $key) {
+                        $cache->set($key, $imageVo->getPickMaps(), 0);
                     });
                 }
             }
         }
 
-        $image
-            ->setTemplateVo($templateVo)
-            ->setInterfereVo($interfereVo);
+
     }
 
     /**
@@ -134,10 +142,10 @@ class Factory
      */
     public function getCacheInstance(): Cache
     {
-        if(empty($this->cacheInstance)){
+        if (empty($this->cacheInstance)) {
             $this->cacheInstance = new Cache($this->config['cache']);
         }
-        return  $this->cacheInstance;
+        return $this->cacheInstance;
     }
 
     public function makeWordData(): WordData
