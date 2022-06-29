@@ -11,7 +11,7 @@ PHP实现： https://gitee.com/fastknife/aj-captcha
 
 ##### 官方预览效果
 
-![Wechat](https://captcha.anji-plus.com/static/8cm.jpg  "")&emsp;&emsp;![h5](https://images.gitee.com/uploads/images/2020/0429/174246_c33e3fa3_1728982.png "h5.png")
+![block](https://gitee.com/anji-plus/captcha/raw/master/images/%E6%BB%91%E5%8A%A8%E6%8B%BC%E5%9B%BE.gif) &emsp;&emsp;![click](https://gitee.com/anji-plus/captcha/raw/master/images/%E7%82%B9%E9%80%89%E6%96%87%E5%AD%97.gif)
 
 #### 注意事项
 * 你需要打开 gd、 openssl扩展
