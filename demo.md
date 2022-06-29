@@ -27,9 +27,9 @@ return [
         'text' => '我的水印'
     ],
     'cache' => [
-        'constructor' => \Fastknife\Utils\CacheUtils::class,//若您使用了框架，不推荐使用该配置
+        'constructor' => \Fastknife\Utils\CacheUtils::class,//若您使用了框架，并且想使用类似于redis这样的缓存驱动，则应换成框架的中的缓存驱动
         'method' => [
-            //遵守PSR-16规范不需要设置此项目（tp6, laravel,hyperf）。如tp5就不支持（delete => rm）,
+            // 遵守PSR-16规范不需要设置此项（tp6, laravel,hyperf）。如tp5就不支持（tp5缓存方法是rm,所以要配置为"delete" => "rm"）,
             'get' => 'get', //获取
             'set' => 'set', //设置
             'delete' => 'delete',//删除

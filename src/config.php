@@ -28,9 +28,23 @@ return [
         'text' => '我的水印'
     ],
     'cache' => [
-        'constructor' => \Fastknife\Utils\CacheUtils::class,//建议使用您自己项目框架的缓存驱动
-        'options' => [
-            // Fastknife\Utils\CacheUtils::class 中的配置
+        //若您使用了框架，并且想使用类似于redis这样的缓存驱动，则应换成框架的中的缓存驱动
+        'constructor' => \Fastknife\Utils\CacheUtils::class,
+        'method' => [
+            //遵守PSR-16规范不需要设置此项（tp6, laravel,hyperf）。如tp5就不支持（tp5缓存方法是rm,所以要配置为"delete" => "rm"）
+            /**
+            'get' => 'get', //获取
+            'set' => 'set', //设置
+            'delete' => 'delete',//删除
+            'has' => 'has' //key是否存在
+             */
         ],
+        'options' => [
+            //如果您依然使用\Fastknife\Utils\CacheUtils做为您的缓存驱动，那么您可以自定义缓存配置。
+            'expire'        => 300,//缓存有效期 （默认为0 表示永久缓存）
+            'prefix'        => '', //缓存前缀
+            'path'          => '', //缓存目录
+            'serialize'     => [], //缓存序列化和反序列化方法
+        ]
     ]
 ];

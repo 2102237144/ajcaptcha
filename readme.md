@@ -52,17 +52,16 @@ AJ-Captcha for php
 │	│
 │	├─Service 服务层
 │	│
-│	└─Utils 工具类
-│
-├─test 测试实例
+│	├─ Utils工具类
 │	│
-│	├─thinkphp thinkphp框架测试示例
-│	│
-│	├─laravel laravel框架测试示例
-│	│
-│	└─*.php 原生测试文件 配置文件
-└─config.php 配置参考
-
+│	└─ config.php 配置参考
+└─test 测试实例
+	│
+	├─thinkphp thinkphp框架测试示例
+	│
+	├─laravel laravel框架测试示例
+	│
+	└─*.php 原生测试文件 配置文件
 ```
 
 #### [更新日志](./changelog.md)
