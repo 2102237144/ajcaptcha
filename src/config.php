@@ -24,7 +24,7 @@ return [
     //水印
     'watermark' => [
         'fontsize' => 12,
-        'color' => '#ffffff',
+        'color' => '#000000',
         'text' => '我的水印'
     ],
     'cache' => [

@@ -42,17 +42,22 @@ abstract class BaseImage
     protected function makeWatermark(Image $image)
     {
         if (! empty($this->watermark)) {
-            //1汉字3个字节。  汉字长宽比约0.618; fontsize是以高度来计算像素的。
-            $offsetX = intval(strlen($this->watermark['text']) / 3 * $this->watermark['fontsize'] * 0.618);
-            $offsetY = intval($this->watermark['fontsize'] / 2);
-            $x = $image->getWidth() - $offsetX;
-            $y = $image->getHeight() - $offsetY;
+            $info = imagettfbbox($this->watermark['fontsize'], 0, $this->fontFile, $this->watermark['text']);
+            $minX = min($info[0], $info[2], $info[4], $info[6]);
+            $minY = min($info[1], $info[3], $info[5], $info[7]);
+            $maxY = max($info[1], $info[3], $info[5], $info[7]);
+            $x = $minX;
+            $y = abs($minY);
+            /* 计算文字初始坐标和尺寸 */
+            $h = $maxY - $minY;
+            $x += $image->getWidth() - $this->watermark['fontsize']/2; //留出半个单位字体像素的余白，不至于水印紧贴着右边
+            $y += $image->getHeight() - $h;
             $image->text($this->watermark['text'], $x, $y, function (Font $font) {
                 $font->file($this->fontFile);
                 $font->size($this->watermark['fontsize']);
                 $font->color($this->watermark['color']);
-                $font->align('center');
-                $font->valign('center');
+                $font->align('right');
+                $font->valign('bottom');
             });
         }
     }
