@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Fastknife\Service;
@@ -13,8 +14,9 @@ class ClickWordCaptchaService extends Service
 
     /**
      * 获取文字验证码
+     * @param string $token 自定义token
      */
-    public function get(): array
+    public function get(string $token = null): array
     {
         $cacheEntity = $this->factory->getCacheInstance();
         $wordImage = $this->factory->makeWordImage();
@@ -23,14 +25,14 @@ class ClickWordCaptchaService extends Service
         $data = [
             'originalImageBase64' => $wordImage->response(),
             'secretKey' => RandomUtils::getRandomCode(16, 3),
-            'token' => RandomUtils::getUUID(),
+            'token' => $token ?? RandomUtils::getUUID(),
             'wordList' => $wordImage->getWordList()
         ];
         //缓存
         $cacheEntity->set($data['token'], [
             'secretKey' => $data['secretKey'],
             'point' => $wordImage->getPoint()
-        ],7200);
+        ], 600);
         return $data;
     }
 
@@ -57,8 +59,9 @@ class ClickWordCaptchaService extends Service
         if ($callback instanceof \Closure) {
             $callback();
         }
+
+        //删除
+        $cacheEntity = $this->factory->getCacheInstance();
+        $cacheEntity->delete($token);
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Fastknife\Service;
@@ -12,7 +13,7 @@ class BlockPuzzleCaptchaService extends Service
      * 获取验证码图片信息
      * @return array
      */
-    public function get(): array
+    public function get(string $token = null): array
     {
         $cacheEntity = $this->factory->getCacheInstance();
         $blockImage = $this->factory->makeBlockImage();
@@ -21,13 +22,13 @@ class BlockPuzzleCaptchaService extends Service
             'originalImageBase64' => $blockImage->response(),
             'jigsawImageBase64' => $blockImage->response('template'),
             'secretKey' => RandomUtils::getRandomCode(16, 3),
-            'token' => RandomUtils::getUUID(),
+            'token' => $token ?? RandomUtils::getUUID(),
         ];
         //缓存
         $cacheEntity->set($data['token'], [
             'secretKey' => $data['secretKey'],
             'point' => $blockImage->getPoint()
-        ], 7200);
+        ], 600);
         return $data;
     }
 
@@ -40,7 +41,7 @@ class BlockPuzzleCaptchaService extends Service
      * @param string $pointJson
      * @param null $callback
      */
-    public function validate( $token,  $pointJson, $callback = null)
+    public function validate($token,  $pointJson, $callback = null)
     {
         //获取并设置 $this->originData
         $this->setOriginData($token);
@@ -54,8 +55,12 @@ class BlockPuzzleCaptchaService extends Service
 
         //检查
         $blockData->check($this->originData['point'], $targetPoint);
-        if($callback instanceof \Closure){
+        if ($callback instanceof \Closure) {
             $callback();
         }
+
+        //删除
+        $cacheEntity = $this->factory->getCacheInstance();
+        $cacheEntity->delete($token);
     }
 }

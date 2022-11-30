@@ -42,6 +42,7 @@ abstract class Service
     }
 
     private function setEncryptCache($token, $pointJson){
+        return ; //关闭二次验证
         $cacheEntity = $this->factory->getCacheInstance();
         $pointStr = AesUtils::decrypt($pointJson, $this->originData['secretKey']);
         $key = AesUtils::encrypt($token. '---'. $pointStr, $this->originData['secretKey']);

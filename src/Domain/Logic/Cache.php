@@ -15,7 +15,7 @@ class Cache
         'get' => 'get',
         'setex' => 'setex',
         'set' => 'set',
-        'delete' => 'delete',
+        'delete' => 'del',
         'has' => 'has'
     ];
 
