@@ -105,7 +105,7 @@ abstract class Service
 
     protected function setOriginData($token){
         $cacheEntity = $this->factory->getCacheInstance();
-        $this->originData = $cacheEntity->get($token);
+        $this->originData = unserialize($cacheEntity->get($token));
         if (empty($this->originData)) {
             throw new ParamException('参数校验失败：token');
         }

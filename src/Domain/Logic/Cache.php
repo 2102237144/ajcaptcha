@@ -13,6 +13,7 @@ class Cache
 
     protected $methodMap = [
         'get' => 'get',
+        'setex' => 'setex',
         'set' => 'set',
         'delete' => 'delete',
         'has' => 'has'
@@ -86,13 +87,35 @@ class Cache
     public function get($key, $default = null)
     {
         $method = $this->getDriverMethod('get');
-        return $this->execute($method, [$key,$default]);
+        $ret = $this->execute($method, [$key]);
+        if(empty($ret)){
+            return $default;
+        }
+        return $ret;
     }
 
     public function set($key, $value, $ttl = null)
     {
+        if($ttl){
+            return $this->setex($key,$value,$ttl);
+        }
+
         $method = $this->getDriverMethod('set');
-        return $this->execute($method, [$key, $value, $ttl]);
+        if(is_array($value)){
+            $value = serialize($value);
+        }
+        
+        return $this->execute($method, [$key, $value]);
+    }
+
+    public function setex($key, $value, $ttl = 720)
+    {
+        $method = $this->getDriverMethod('setex');
+        if(is_array($value)){
+            $value = serialize($value);
+        }
+
+        return $this->execute($method, [$key, $ttl, $value]);
     }
 
     public function delete($key)
